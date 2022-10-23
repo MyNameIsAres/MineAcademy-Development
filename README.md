@@ -1,4 +1,3 @@
-# MineAcademy-Development
 MineAcademy Development for IntelliJ
 ==================================
 
