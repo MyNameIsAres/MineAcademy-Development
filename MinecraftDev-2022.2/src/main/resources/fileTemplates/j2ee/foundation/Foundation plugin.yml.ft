@@ -1,0 +1,25 @@
+name: ${project.name}
+version: ${project.version}
+main: ${main.class}
+#if (${API_VERSION})
+api-version: 1.13
+#end
+
+#if (${AUTHOR_LIST})
+authors: ${AUTHOR_LIST}
+#end
+#if (${DESCRIPTION})
+description: ${DESCRIPTION}
+#end
+#if (${WEBSITE})
+website: ${WEBSITE}
+#end
+
+#if (${DEPEND})
+depend: ${DEPEND}
+#end
+#if (${SOFT_DEPEND})
+softdepend: ${SOFT_DEPEND}
+#end
+
+

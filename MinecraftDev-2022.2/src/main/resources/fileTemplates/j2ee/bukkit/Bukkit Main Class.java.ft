@@ -1,0 +1,19 @@
+package ${PACKAGE};
+
+import org.bukkit.plugin.java.JavaPlugin;
+
+public final class ${CLASS_NAME} extends JavaPlugin {
+
+    @Override
+    public void onEnable() {
+        // Plugin startup logic
+        System.out.println("${CLASS_NAME} is enabled")
+
+
+        }
+
+    @Override
+    public void onDisable() {
+        // Plugin shutdown logic
+    }
+}

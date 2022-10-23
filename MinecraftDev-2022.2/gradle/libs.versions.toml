@@ -1,0 +1,33 @@
+[versions]
+coroutines = "1.6.3"
+junit = "5.9.0"
+asm = "9.3"
+
+[libraries]
+coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
+
+# GrammarKit
+jflex-lib = "org.jetbrains.idea:jflex:1.7.0-b7f882a"
+jflex-skeleton = "org.jetbrains.idea:jflex:1.7.0-c1fdf11"
+grammarKit = "org.jetbrains.idea:grammar-kit:1.5.1"
+
+# Gradle Tooling
+gradleToolingExtension = "com.jetbrains.intellij.gradle:gradle-tooling-extension:222-EAP-SNAPSHOT"
+annotations = "org.jetbrains:annotations:23.0.0"
+groovy = "org.codehaus.groovy:groovy-all:2.5.18"
+
+asm = { module = "org.ow2.asm:asm", version.ref = "asm" }
+asm-tree = { module = "org.ow2.asm:asm-tree", version.ref = "asm" }
+asm-analysis = { module = "org.ow2.asm:asm-analysis", version.ref = "asm" }
+
+# Testing
+test-mockJdk = "org.jetbrains.idea:mock-jdk:1.7-4d76c50"
+test-nbt = "com.demonwav.mcdev:all-types-nbt:1.0"
+
+junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
+junit-entine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
+
+[bundles]
+coroutines = ["coroutines-core", "coroutines-swing"]
+asm = ["asm", "asm-tree", "asm-analysis"]

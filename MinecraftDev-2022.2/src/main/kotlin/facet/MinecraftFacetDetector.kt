@@ -1,0 +1,147 @@
+/*
+ * Minecraft Dev for IntelliJ
+ *
+ * https://minecraftdev.org
+ *
+ * Copyright (c) 2021 minecraft-dev
+ *
+ * MIT License
+ */
+
+package com.demonwav.mcdev.facet
+
+import com.demonwav.mcdev.platform.PlatformType
+import com.demonwav.mcdev.util.ifEmpty
+import com.demonwav.mcdev.util.runWriteTaskLater
+import com.intellij.facet.FacetManager
+import com.intellij.facet.impl.ui.libraries.LibrariesValidatorContextImpl
+import com.intellij.framework.library.LibraryVersionProperties
+import com.intellij.openapi.module.Module
+import com.intellij.openapi.module.ModuleManager
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.roots.ModuleRootEvent
+import com.intellij.openapi.roots.ModuleRootListener
+import com.intellij.openapi.roots.OrderRootType
+import com.intellij.openapi.roots.libraries.LibraryDetectionManager
+import com.intellij.openapi.roots.libraries.LibraryKind
+import com.intellij.openapi.roots.libraries.LibraryProperties
+import com.intellij.openapi.roots.ui.configuration.libraries.LibraryPresentationManager
+import com.intellij.openapi.startup.StartupActivity
+import com.intellij.openapi.util.Key
+import org.jetbrains.plugins.gradle.util.GradleUtil
+
+class MinecraftFacetDetector : StartupActivity {
+    companion object {
+        private val libraryVersionsKey = Key<MutableMap<LibraryKind, String>>("mcdev.libraryVersions")
+
+        fun getLibraryVersions(module: Module): Map<LibraryKind, String> {
+            return module.getUserData(libraryVersionsKey) ?: emptyMap()
+        }
+    }
+
+    override fun runActivity(project: Project) {
+        MinecraftModuleRootListener.doCheck(project)
+    }
+
+    private object MinecraftModuleRootListener : ModuleRootListener {
+        override fun rootsChanged(event: ModuleRootEvent) {
+            if (event.isCausedByFileTypesChange) {
+                return
+            }
+
+            val project = event.source as? Project ?: return
+            doCheck(project)
+        }
+
+        fun doCheck(project: Project) {
+            val moduleManager = ModuleManager.getInstance(project)
+            for (module in moduleManager.modules) {
+                val facetManager = FacetManager.getInstance(module)
+                val minecraftFacet = facetManager.getFacetByType(MinecraftFacet.ID)
+
+                if (minecraftFacet == null) {
+                    checkNoFacet(module)
+                } else {
+                    checkExistingFacet(module, minecraftFacet)
+                }
+            }
+        }
+
+        private fun checkNoFacet(module: Module) {
+            val platforms = autoDetectTypes(module).ifEmpty { return }
+
+            val facetManager = FacetManager.getInstance(module)
+            val configuration = MinecraftFacetConfiguration()
+            configuration.state.autoDetectTypes.addAll(platforms)
+
+            val facetType = MinecraftFacet.facetTypeOrNull ?: return
+            val facet = facetManager.createFacet(facetType, "Minecraft-MA", configuration, null)
+            runWriteTaskLater {
+                // Only add the new facet if there isn't a Minecraft facet already - double check here since this
+                // task may run much later
+                if (module.isDisposed || facet.isDisposed) {
+                    // Module may be disposed before we run
+                    return@runWriteTaskLater
+                }
+                if (facetManager.getFacetByType(MinecraftFacet.ID) == null) {
+                    val model = facetManager.createModifiableModel()
+                    model.addFacet(facet)
+                    model.commit()
+                }
+            }
+        }
+
+        private fun checkExistingFacet(module: Module, facet: MinecraftFacet) {
+            val platforms = autoDetectTypes(module).ifEmpty { return }
+            val types = facet.configuration.state.autoDetectTypes
+            types.clear()
+            types.addAll(platforms)
+
+            facet.refresh()
+        }
+
+        private fun autoDetectTypes(module: Module): Set<PlatformType> {
+            val libraryVersions = module.getUserData(libraryVersionsKey)
+                ?: mutableMapOf<LibraryKind, String>().also { module.putUserData(libraryVersionsKey, it) }
+            libraryVersions.clear()
+
+            val presentationManager = LibraryPresentationManager.getInstance()
+            val context = LibrariesValidatorContextImpl(module)
+
+            val platformKinds = mutableSetOf<LibraryKind>()
+            context.rootModel
+                .orderEntries()
+                .using(context.modulesProvider)
+                .recursively()
+                .librariesOnly()
+                .forEachLibrary forEach@{ library ->
+                    MINECRAFT_LIBRARY_KINDS.forEach { kind ->
+
+                        if (presentationManager.isLibraryOfKind(library, context.librariesContainer, setOf(kind))) {
+                            val libraryFiles =
+                                context.librariesContainer.getLibraryFiles(library, OrderRootType.CLASSES).toList()
+                            LibraryDetectionManager.getInstance().processProperties(
+                                libraryFiles,
+                                object : LibraryDetectionManager.LibraryPropertiesProcessor {
+                                    override fun <P : LibraryProperties<*>> processProperties(
+                                        kind: LibraryKind,
+                                        properties: P
+                                    ): Boolean {
+                                        return if (properties is LibraryVersionProperties) {
+                                            libraryVersions[kind] = properties.versionString ?: return true
+                                            false
+                                        } else {
+                                            true
+                                        }
+                                    }
+                                }
+                            )
+                            platformKinds.add(kind)
+                        }
+                    }
+                    return@forEach true
+                }
+            return platformKinds.mapNotNull { kind -> PlatformType.fromLibraryKind(kind) }.toSet()
+        }
+    }
+}

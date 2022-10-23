@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId></groupId>
+  <artifactId></artifactId>
+  <version></version>
+  <name></name>
+
+  <packaging>jar</packaging>
+
+  <properties>
+    <author>${author}</author>
+
+    <java.version>${javaVersion}</java.version>
+
+    <main.class>${mainClass}</main.class>
+
+    <foundation.version>${foundationVersion}</foundation.version>
+
+    <foundation.path>com.github.kangarko</foundation.path>
+
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <repositories></repositories>
+
+  #if($pluginRepo)
+    $pluginRepo
+  #end
+  <dependencies></dependencies>
+
+  <build>
+    <finalName>${project.name}-${project.version}</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>${mavenJarVersion}</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${mavenCompilerVersion}</version>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>${mavenShadeVersion}</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <createDependencyReducedPom>false</createDependencyReducedPom>
+          <artifactSet>
+            <includes>
+              <include>${foundation.path}:Foundation*</include>
+            </includes>
+          </artifactSet>
+          <relocations>
+            <relocation>
+              <pattern>org.mineacademy.${project.artifactId}.fo</pattern>
+              <shadedPattern>${project.groupId}.${project.artifactId}.lib</shadedPattern>
+            </relocation>
+          </relocations>
+        </configuration>
+      </plugin>
+    </plugins>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+  </build>
+</project>

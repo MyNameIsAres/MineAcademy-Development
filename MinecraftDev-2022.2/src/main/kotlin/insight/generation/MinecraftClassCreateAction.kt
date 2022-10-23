@@ -1,0 +1,90 @@
+/*
+ * Minecraft Dev for IntelliJ
+ *
+ * https://minecraftdev.org
+ *
+ * Copyright (c) 2021 minecraft-dev
+ *
+ * MIT License
+ */
+
+package com.demonwav.mcdev.insight.generation
+
+import com.demonwav.mcdev.asset.GeneralAssets
+import com.intellij.codeInsight.daemon.JavaErrorBundle
+import com.intellij.codeInsight.daemon.impl.analysis.HighlightClassUtil
+import com.intellij.ide.actions.CreateFileFromTemplateDialog
+import com.intellij.ide.actions.CreateTemplateInPackageAction
+import com.intellij.openapi.actionSystem.DataContext
+import com.intellij.openapi.project.DumbAware
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.InputValidatorEx
+import com.intellij.openapi.util.text.StringUtil
+import com.intellij.psi.*
+import com.intellij.psi.util.PsiUtil
+import org.jetbrains.jps.model.java.JavaModuleSourceRootTypes
+
+class MinecraftClassCreateAction :
+    CreateTemplateInPackageAction<PsiClass>(
+        CAPTION,
+        "Class generation for modders",
+        GeneralAssets.MC_TEMPLATE,
+        JavaModuleSourceRootTypes.SOURCES
+    ),
+    DumbAware {
+
+    override fun getActionName(directory: PsiDirectory?, newName: String, templateName: String?): String = CAPTION
+
+    override fun buildDialog(project: Project, directory: PsiDirectory, builder: CreateFileFromTemplateDialog.Builder) {
+        builder.setTitle(CAPTION)
+        builder.setValidator(ClassInputValidator(project, directory))
+    }
+
+    override fun isAvailable(dataContext: DataContext): Boolean {
+        return super.isAvailable(dataContext)
+    }
+
+    override fun checkPackageExists(directory: PsiDirectory): Boolean {
+        val pkg = JavaDirectoryService.getInstance().getPackage(directory) ?: return false
+
+        val name = pkg.qualifiedName
+        return StringUtil.isEmpty(name) || PsiNameHelper.getInstance(directory.project).isQualifiedName(name)
+    }
+
+    override fun getNavigationElement(createdElement: PsiClass): PsiElement? {
+        return createdElement.lBrace
+    }
+
+    override fun doCreate(dir: PsiDirectory, className: String, templateName: String): PsiClass? {
+        return JavaDirectoryService.getInstance().createClass(dir, className, templateName, false)
+    }
+
+    private class ClassInputValidator(
+        private val project: Project,
+        private val directory: PsiDirectory
+    ) : InputValidatorEx {
+        override fun getErrorText(inputString: String): String? {
+            if (inputString.isNotEmpty() && !PsiNameHelper.getInstance(project).isQualifiedName(inputString)) {
+                return JavaErrorBundle.message("create.class.action.this.not.valid.java.qualified.name")
+            }
+
+            val shortName = StringUtil.getShortName(inputString)
+            val languageLevel = PsiUtil.getLanguageLevel(directory)
+            return if (HighlightClassUtil.isRestrictedIdentifier(shortName, languageLevel)) {
+                JavaErrorBundle.message("restricted.identifier", shortName)
+            } else {
+                null
+            }
+        }
+
+        override fun checkInput(inputString: String): Boolean =
+            inputString.isNotBlank() && getErrorText(inputString) == null
+
+        override fun canClose(inputString: String): Boolean =
+            checkInput(inputString)
+    }
+
+    private companion object {
+        private const val CAPTION = "Minecraft Class"
+    }
+}

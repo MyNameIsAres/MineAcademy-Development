@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<!DOCTYPE xml>
+<project name="${name}" default="Build">
+    <target name="Build">
+
+        <jar jarfile="${serverPath}/plugins/${name}.jar"
+             basedir="./target/classes/"
+             includes="**/*">
+        </jar>
+    </target>
+</project>

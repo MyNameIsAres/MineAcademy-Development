@@ -1,0 +1,18 @@
+package ${PACKAGE};
+
+import org.mineacademy.fo.Common;
+import org.mineacademy.fo.plugin.SimplePlugin;
+
+public final class ${CLASS_NAME} extends SimplePlugin {
+
+    @Override
+    public void onPluginStart() {
+        Common.log("${CLASS_NAME} is enabled!");
+
+    }
+
+    @Override
+    public void onPluginStop() {
+        // Plugin shutdown logic
+    }
+}

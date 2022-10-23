@@ -1,0 +1,120 @@
+<!--
+    Minecraft Dev for IntelliJ
+
+    https://minecraftdev.org
+
+    Copyright (c) 2021 minecraft-dev
+
+    MIT License
+-->
+
+<idea-plugin require-restart="true">
+
+    <depends>com.intellij.modules.java</depends>
+    <depends>org.jetbrains.plugins.yaml</depends>
+    <depends>org.jetbrains.idea.maven</depends>
+    <depends>com.intellij.gradle</depends>
+    <depends>org.intellij.groovy</depends>
+    <depends>ByteCodeViewer</depends>
+    <depends optional="true" config-file="toml-support.xml">org.toml.lang</depends>
+
+    <id>org.ares.foundation.creator</id>
+    <name>MineAcademy Development Development</name>
+    <vendor email="noemailyet@doesnotexist.com">Email Does Not Exist Yet</vendor>
+
+    <description><![CDATA[
+      Brings support for Foundation, Spigot, projects to Intellij IDEA.
+    ]]></description>
+
+    <resource-bundle>messages.MinecraftDevelopment</resource-bundle>
+
+    <change-notes><![CDATA[
+        Please report issues to <a href="https://github.com/MyNameIsAres/MineAcademy-Development/issues">the issue tracker</a>!
+    ]]>
+    </change-notes>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- This is grouped in the following order EXCEPT for localInspections and moduleTypes. All localInspections are grouped at the
+             end, but the individual local inspections themselves should also be ordered in this way.
+               * No platform
+               * Foundation
+               * Spigot
+                -->
+
+        <!--region NO PLATFORM-->
+        <!---->
+        <configurationType implementation="com.demonwav.mcdev.platform.foundation.creator.AntJarConfigurationType"/>
+        <moduleType id="MINECRAFT_MODULE_TYPE" implementationClass="com.demonwav.mcdev.platform.MinecraftModuleType"/>
+        <moduleBuilder id="MINECRAFT_MODULE" builderClass="com.demonwav.mcdev.creator.MinecraftModuleBuilder"/>
+        <facetType implementation="com.demonwav.mcdev.facet.MinecraftFacetType" />
+        <postStartupActivity implementation="com.demonwav.mcdev.facet.MinecraftFacetDetector"/>
+
+        <!-- File templates are for project creations -->
+        <fileTemplateGroup implementation="com.demonwav.mcdev.util.MinecraftTemplates"/>
+
+        <!-- Project-independent Line Marker Providers -->
+        <codeInsight.lineMarkerProvider language="" implementationClass="com.demonwav.mcdev.insight.ListenerLineMarkerProvider"/>
+        <codeInsight.lineMarkerProvider language="" implementationClass="com.demonwav.mcdev.insight.ColorLineMarkerProvider"/>
+        <codeInsight.lineMarkerProvider language="" implementationClass="com.demonwav.mcdev.insight.PluginLineMarkerProvider"/>
+
+        <!-- Project-independent Annotators-->
+        <annotator language="UAST" implementationClass="com.demonwav.mcdev.insight.ListenerEventAnnotator"/>
+        <annotator language="UAST" implementationClass="com.demonwav.mcdev.insight.ColorAnnotator"/>
+
+        <!-- Project-independent Inspection Suppressors -->
+        <lang.inspectionSuppressor language="JAVA" implementationClass="com.demonwav.mcdev.inspection.StaticListenerInspectionSuppressor"/>
+
+        <!-- Project View Node Decorators provide the project icons -->
+        <projectViewNodeDecorator implementation="com.demonwav.mcdev.platform.MinecraftProjectViewNodeDecorator"/>
+        <deadCode implementation="com.demonwav.mcdev.inspection.PlatformAnnotationEntryPoint"/>
+
+            <!-- Temporarily disabled as it lead to a bug in Intellij -->
+<!--        <projectConfigurable displayName="Yaml Template"-->
+<!--                             id="Settings.Minecraft.YamlTemplate"-->
+<!--                             groupId="language"-->
+<!--                             instance="platform.foundation.data.ClassCreatorConfigurable"/>-->
+
+
+        <applicationService serviceImplementation="com.demonwav.mcdev.MinecraftSettings"/>
+
+
+<!--        <errorHandler implementation="com.demonwav.mcdev.errorreporter.ErrorReporter"/>-->
+        <!--endregion-->
+
+        <!--region FOUNDATION-->
+        <!---->
+        <dependencySupport coordinate="org.mineacademy:Foundation" kind="java"/>
+        <fileIconProvider implementation="com.demonwav.mcdev.platform.foundation.FoundationFileIconProvider"/>
+        <library.presentationProvider implementation="com.demonwav.mcdev.platform.foundation.framework.FoundationPresentationProvider" />
+
+        <!--endregion-->
+
+        <!--region BUKKIT-->
+        <!---->
+        <dependencySupport coordinate="org.spigotmc:spigot-api" kind="java"/>
+        <fileIconProvider implementation="com.demonwav.mcdev.platform.bukkit.BukkitFileIconProvider"/>
+        <library.presentationProvider implementation="com.demonwav.mcdev.platform.bukkit.framework.SpigotPresentationProvider" />
+        <!--endregion-->
+
+        <registryKey defaultValue="false" description="Enable the Minecraft Wizard finalizer step." key="mcdev.wizard.finalizer"/>
+        <registryKey defaultValue="true" description="Use the new mappings parser." key="mcdev.new.tsrg.parser"/>
+    </extensions>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <notificationGroup id="Maven API Error"
+                           displayType="BALLOON"
+                           key="maven.api.error"/>
+    </extensions>
+
+    <projectListeners>
+        <listener class="com.demonwav.mcdev.facet.MinecraftFacetDetector$MinecraftModuleRootListener"
+                  topic="com.intellij.openapi.roots.ModuleRootListener"/>
+    </projectListeners>
+    <actions>
+
+<!--        <action class="com.demonwav.mcdev.platform.foundation.TemplateHandler">-->
+<!--            <add-to-group group-id="NewGroup1" anchor="last"/>-->
+<!--        </action>-->
+
+    </actions>
+</idea-plugin>
