@@ -18,7 +18,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm") version "1.7.10"
     kotlin("plugin.serialization") version "1.7.10"
-
     java
     mcdev
     groovy
@@ -115,7 +114,7 @@ intellij {
         "junit"
     )
 
-    pluginName.set("Minecraft Development")
+    pluginName.set("MineAcademy Development")
     updateSinceUntilBuild.set(true)
 
     downloadSources.set(providers.gradleProperty("downloadIdeaSources").map { it.toBoolean() })

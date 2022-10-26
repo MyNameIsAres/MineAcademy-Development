@@ -16,7 +16,6 @@ import com.demonwav.mcdev.creator.buildsystem.BuildSystemType
 import com.demonwav.mcdev.platform.BaseTemplate
 import com.demonwav.mcdev.platform.foundation.BukkitModuleType
 import com.demonwav.mcdev.platform.foundation.FoundationLikeConfiguration
-import com.demonwav.mcdev.util.MinecraftTemplates.Companion.BUKKIT_ANT_BUILD_TEMPLATE
 import com.demonwav.mcdev.util.MinecraftTemplates.Companion.FOUNDATION_ANT_BUILD_TEMPLATE
 import com.demonwav.mcdev.util.MinecraftTemplates.Companion.FOUNDATION_MAIN_CLASS_TEMPLATE
 import com.demonwav.mcdev.util.MinecraftTemplates.Companion.FOUNDATION_PLUGIN_YML_TEMPLATE
@@ -75,7 +74,7 @@ object FoundationTemplate : BaseTemplate() {
         props["name"] = config.pluginName
         props["serverPath"] = config.serverPath
 
-        return project.applyTemplate(BUKKIT_ANT_BUILD_TEMPLATE, props)
+        return project.applyTemplate(FOUNDATION_ANT_BUILD_TEMPLATE, props)
     }
 
     fun applyPluginYml(
