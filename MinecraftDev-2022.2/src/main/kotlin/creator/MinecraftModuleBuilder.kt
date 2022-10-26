@@ -320,7 +320,7 @@ class AresNewWizardStep(
             versionRow = this
 
             textField()
-                .bindText(artifactIdProperty)
+                .bindText(versionProperty)
                 .columns(COLUMNS_MEDIUM)
                 .withSpecialValidation(
                     ValidationFunctions.CHECK_NOT_EMPTY,

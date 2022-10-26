@@ -9,8 +9,9 @@
         <jar jarfile="${serverPath}/plugins/${name}.jar" basedir="./target/classes/"
              includes="**/*">
 
-            <zipgroupfileset dir="${user.home}/.m2/repository/com/github/kangarko/Foundation/${foundation.version}/"
-                             includes="**/*${foundation.version}.jar"/>
+            <zipgroupfileset
+                    dir="${user.home}/.m2/repository/com/github/kangarko/Foundation/${foundation.version}/"
+                    includes="**/*${foundation.version}.jar"/>
         </jar>
     </target>
 

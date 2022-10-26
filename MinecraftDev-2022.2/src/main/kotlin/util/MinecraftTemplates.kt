@@ -83,7 +83,7 @@ class MinecraftTemplates : FileTemplateGroupDescriptorFactory {
         const val FOUNDATION_SETTINGS_GRADLE_TEMPLATE = "Foundation settings.gradle"
         const val FOUNDATION_POM_TEMPLATE = "Foundation pom.xml"
         const val FOUNDATION_SUBMODULE_POM_TEMPLATE = "Foundation Submodule pom.xml"
-        const val FOUNDATION_ANT_BUILD_TEMPLATE = "Foundation ant.build"
+        const val FOUNDATION_ANT_BUILD_TEMPLATE = "Foundation new_ant.build"
 
         const val BUKKIT_MAIN_CLASS_TEMPLATE = "Bukkit Main Class.java"
         const val BUKKIT_PLUGIN_YML_TEMPLATE = "Bukkit plugin.yml"
