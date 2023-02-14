@@ -145,6 +145,14 @@
                   </component>
                 </children>
               </grid>
+              <component id="4c7d1" class="javax.swing.JCheckBox" binding="advancedMode">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="2" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Advanced Mode"/>
+                </properties>
+              </component>
             </children>
           </grid>
           <vspacer id="82988">
@@ -159,14 +167,6 @@
             <properties>
               <icon value="assets/icons/platform/Foundation@2x.png"/>
               <text value="&lt;html&gt;&lt;font size=&quot;5&quot;&gt;Foundation Settings&lt;/font&gt;&lt;/html&gt;"/>
-            </properties>
-          </component>
-          <component id="4c7d1" class="javax.swing.JCheckBox" binding="advancedMode">
-            <constraints>
-              <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Advanced Mode"/>
             </properties>
           </component>
           <grid id="464cd" binding="optionalPanel" layout-manager="GridLayoutManager" row-count="3" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">

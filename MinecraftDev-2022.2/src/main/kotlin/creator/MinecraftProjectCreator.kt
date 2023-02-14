@@ -12,6 +12,8 @@ package com.demonwav.mcdev.creator
 
 import com.demonwav.mcdev.creator.buildsystem.BuildSystem
 import com.demonwav.mcdev.creator.exception.ProjectCreatorException
+import com.demonwav.mcdev.platform.PlatformType
+import com.demonwav.mcdev.platform.foundation.creator.FoundationProjectConfig
 import com.demonwav.mcdev.util.invokeAndWait
 import com.demonwav.mcdev.util.invokeLater
 import com.demonwav.mcdev.util.virtualFileOrError
@@ -27,7 +29,7 @@ class MinecraftProjectCreator {
 
     var buildSystem: BuildSystem? = null
 
-    var config: ProjectConfig? = null
+    var config: ProjectConfig? =  FoundationProjectConfig(PlatformType.FOUNDATION)
 
     fun create(root: Path, module: Module) {
         val build = buildSystem ?: throw IllegalStateException("buildSystem not initialized")
