@@ -10,7 +10,6 @@
 
 package com.demonwav.mcdev.platform.foundation.creator
 
-
 import com.demonwav.mcdev.asset.PlatformAssets
 import com.demonwav.mcdev.creator.MinecraftModuleWizardStep
 import com.demonwav.mcdev.creator.MinecraftProjectCreator
@@ -21,12 +20,20 @@ import com.demonwav.mcdev.creator.exception.SetupException
 import com.demonwav.mcdev.creator.getVersionSelector
 import com.demonwav.mcdev.platform.PlatformType
 import com.demonwav.mcdev.util.JavaVersions
+import com.intellij.ide.starters.JavaStartersBundle
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
+import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.ui.MessageType
 import com.intellij.openapi.ui.TextFieldWithBrowseButton
 import com.intellij.openapi.ui.popup.Balloon
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.ui.awt.RelativePoint
+import com.intellij.ui.dsl.builder.panel
+import com.intellij.uiDesigner.core.GridConstraints
+import java.awt.BorderLayout
+import java.awt.Dimension
+import java.awt.FlowLayout
+import java.awt.GridBagConstraints
 import javax.swing.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -68,25 +75,25 @@ class FoundationProjectSettingsWizard(private val creator: MinecraftProjectCreat
 
     private var versionsLoaded: Boolean = false
 
+    // TODO: This is a mess. Fix it (14-02-2023)
     init {
         if (advancedMode.isSelected) {
             configurationPanel.isVisible = true
             optionalPanel.isVisible = true
-
         } else {
             configurationPanel.isVisible = false
             optionalPanel.isVisible = false
-
         }
-
-
         advancedMode.addActionListener {
             if (advancedMode.isSelected) {
                 configurationPanel.isVisible = true
                 optionalPanel.isVisible = true
+                optionalPanel.size = Dimension(251, 254)
             } else {
+                optionalPanel.size = Dimension(251, 254)
                 configurationPanel.isVisible = false
                 optionalPanel.isVisible = false
+
             }
         }
     }

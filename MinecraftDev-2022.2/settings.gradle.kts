@@ -10,6 +10,4 @@
 
 rootProject.name = "MinecraftDev"
 
-gradle.startParameter.showStacktrace = ShowStacktrace.ALWAYS_FULL
-
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")

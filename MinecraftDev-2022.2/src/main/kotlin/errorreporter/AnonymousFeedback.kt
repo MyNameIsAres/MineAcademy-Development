@@ -20,7 +20,7 @@ import com.intellij.openapi.util.text.StringUtil
 import java.net.HttpURLConnection
 import java.nio.ByteBuffer
 import java.nio.charset.CodingErrorAction
-import org.apache.commons.httpclient.HttpStatus
+import org.apache.http.HttpStatus
 import org.apache.commons.io.IOUtils
 import org.apache.http.HttpHeaders
 import org.apache.http.entity.ContentType

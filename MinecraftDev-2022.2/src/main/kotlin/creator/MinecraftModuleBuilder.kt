@@ -44,6 +44,7 @@ import com.intellij.openapi.roots.ModifiableRootModel
 import com.intellij.openapi.roots.ui.configuration.JdkComboBox
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider
 import com.intellij.openapi.roots.ui.configuration.sdkComboBox
+import com.intellij.openapi.roots.ui.configuration.validateJavaVersion
 import com.intellij.openapi.startup.StartupManager
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.ui.TextFieldWithBrowseButton
@@ -80,6 +81,7 @@ class MinecraftModuleBuilder : JavaModuleBuilder() {
         val project = modifiableRootModel.project
         val (root, vFile) = createAndGetRoot()
         modifiableRootModel.addContentEntry(vFile)
+
 
 
         if (moduleJdk != null) {
@@ -142,8 +144,6 @@ class MinecraftModuleBuilder : JavaModuleBuilder() {
         )
     }
 
-
-
     override fun modifyProjectTypeStep(settingsStep: SettingsStep): ModuleWizardStep? {
         return null;
     }
@@ -164,6 +164,8 @@ class AresNewWizardStep(
     private val starterContext: CommonStarterContext = CommonStarterContext()
     private val parentDisposable: Disposable = parentDisposable
     private val moduleBuilder: ModuleBuilder = moduleBuilder
+
+    private val contentPanel: DialogPanel by lazy { createComponent() }
 
     private val propertyGraph: PropertyGraph = PropertyGraph()
     private val entityNameProperty: GraphProperty<String> = propertyGraph.lazyProperty(::suggestName)
@@ -192,7 +194,7 @@ class AresNewWizardStep(
         return when {
             platformProperty.get() == PlatformType.FOUNDATION -> FoundationProjectConfig(PlatformType.FOUNDATION)
             platformProperty.get() == PlatformType.SPIGOT -> BukkitProjectConfig(PlatformType.SPIGOT)
-            else -> {FoundationProjectConfig(PlatformType.FOUNDATION)}
+            else -> FoundationProjectConfig(PlatformType.FOUNDATION)
         }
     }
     private fun suggestName(): String {
@@ -208,7 +210,7 @@ class AresNewWizardStep(
         return FileUtil.createSequentFileName(projectFileDirectory, prefix, "")
     }
     override fun getComponent(): JComponent {
-      return createComponent()
+      return contentPanel
     }
 
     override fun updateDataModel() {
@@ -235,6 +237,13 @@ class AresNewWizardStep(
             addSdkUi()
 
         }.withVisualPadding(topField = true)
+    }
+
+    override fun validate(): Boolean {
+        if (!validateFormFields(component, contentPanel, validatedTextComponents)) {
+            return false
+        }
+        return true
     }
 
     @Suppress("SameParameterValue")
@@ -271,7 +280,7 @@ class AresNewWizardStep(
             installNameGenerators(moduleBuilder.builderId, entityNameProperty)
         }.bottomGap(BottomGap.SMALL)
 
-        val locationRow = row(UIBundle.message("label.project.wizard.new.project.location")) {
+        row(UIBundle.message("label.project.wizard.new.project.location")) {
             val commentLabel = projectLocationField(locationProperty, wizardContext)
                 .horizontalAlign(HorizontalAlign.FILL)
                 .withSpecialValidation(
@@ -285,8 +294,6 @@ class AresNewWizardStep(
             locationProperty.afterChange { commentLabel.text = getLocationComment() }
         }
     }
-
-
     private fun Panel.addGroupArtifactUi() {
         row(JavaStartersBundle.message("title.project.group.label")) {
             groupRow = this
@@ -325,7 +332,6 @@ class AresNewWizardStep(
                 .withSpecialValidation(
                     ValidationFunctions.CHECK_NOT_EMPTY,
                     ValidationFunctions.CHECK_NO_WHITESPACES,
-                    ValidationFunctions.CHECK_ARTIFACT_SIMPLE_FORMAT,
                     ValidationFunctions.CHECK_NO_RESERVED_WORDS,
                 )
         }.bottomGap(BottomGap.SMALL)

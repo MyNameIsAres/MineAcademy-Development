@@ -69,10 +69,10 @@
         <deadCode implementation="com.demonwav.mcdev.inspection.PlatformAnnotationEntryPoint"/>
 
             <!-- Temporarily disabled as it lead to a bug in Intellij -->
-<!--        <projectConfigurable displayName="Yaml Template"-->
-<!--                             id="Settings.Minecraft.YamlTemplate"-->
-<!--                             groupId="language"-->
-<!--                             instance="platform.foundation.data.ClassCreatorConfigurable"/>-->
+        <projectConfigurable displayName="Yaml Template"
+                             id="Settings.Minecraft.YamlTemplate"
+                             groupId="language"
+                             instance="platform.foundation.data.ClassCreatorConfigurable"/>
 
 
         <applicationService serviceImplementation="com.demonwav.mcdev.MinecraftSettings"/>
@@ -112,9 +112,9 @@
     </projectListeners>
     <actions>
 
-<!--        <action class="com.demonwav.mcdev.platform.foundation.TemplateHandler">-->
-<!--            <add-to-group group-id="NewGroup1" anchor="last"/>-->
-<!--        </action>-->
+        <action class="com.demonwav.mcdev.platform.foundation.TemplateHandler">
+            <add-to-group group-id="NewGroup1" anchor="last"/>
+        </action>
 
     </actions>
 </idea-plugin>
