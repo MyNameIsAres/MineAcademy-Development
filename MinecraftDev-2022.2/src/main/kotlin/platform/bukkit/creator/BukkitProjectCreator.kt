@@ -137,8 +137,10 @@ open class BukkitDependenciesStep(
                         "org.spigotmc",
                         "spigot-api",
                         "$mcVersion-R0.1-SNAPSHOT",
+                        "provided"
                     )
                 )
+
                 addSonatype(buildSystem.repositories)
             }
             else -> {}
@@ -168,6 +170,12 @@ open class BukkitDependenciesStep(
                 "spigotmc-repo",
                 "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
             )
+        )
+        list.add(
+            BuildRepository(
+                "jitpack.io",
+                "https://jitpack.io"
+                )
         )
     }
 }

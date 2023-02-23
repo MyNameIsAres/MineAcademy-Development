@@ -17,11 +17,11 @@ object JavaVersions {
 
     fun requiredJavaVersion(comboBoxJavaVersion: String) = when (comboBoxJavaVersion) {
         "8" -> JavaVersion.parse("8").toFeatureString()
-        else -> {"17"}
+        else -> {"19"}
     }
 
     fun addJavaVersionBoxItems(javaVersionBox: JComboBox<String>) {
         javaVersionBox.addItem("8")
-        javaVersionBox.addItem("17")
+        javaVersionBox.addItem("19")
     }
 }
