@@ -7,10 +7,9 @@ public final class ${CLASS_NAME} extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
-        System.out.println("${CLASS_NAME} is enabled");
+        getLogger().info("${CLASS_NAME} is enabled!");
 
-
-        }
+    }
 
     @Override
     public void onDisable() {
